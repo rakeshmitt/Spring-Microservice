@@ -1,0 +1,193 @@
+1. kubectl --version
+
+2. create deployment in k8s:
+=========================
+
+kubectl create deployment <deployment name> --image <image name>
+
+3. expose deployment to outer world
+==========================
+
+kubectl expose deployment <deployment-name> --type=LoadBalancer --port=<port>
+
+In case of minikube kubernetes cluster, LoadBalancer type does not work, as it does not have an explicit load balaner. Instead we can use type=NodePort.
+
+In minikube, to access the service url, use the below command:
+
+>> minikube service <service name> (service name is same as deployment name)
+
+3. a - Export the created deployment and services to a yaml file
+===============================================
+kubectl get deployment <deployment name> -o yaml >> <filename>.yaml
+kubectl get service <service name> -o yaml >> <filename>.yaml
+
+4. Scale deployment
+==================
+
+kubectl scale deployment <deployment name> --replicas=<# replica count>
+
+5. Autoscale deployment
+====================
+kubectl autoscale deployment <deployment name> --max=<max autoscale count> --cpu-percent=<cpu threshold>
+kubectl autoscale deployment currency-exchange --min=1 --max=3 --cpu-percent=5 
+
+6 Edit a deployment
+===============
+kubectl edit deployment <deployment name>  (set minReadySeconds: 15 in deployment workload file)
+
+7. Update image
+==============
+kubectl set image deployment <deployment name> <container id>=<image name>
+
+
+8. Get all the events performed while deployment when we run create deployment command.
+===================================
+kubectl get events
+kubectl get events --sort-by=.metadata.creationTimestamp  (sort the events by timestamp)
+
+9.Commands related to PODS (in the command, pods can be referenced as pod/po)
+============================================================
+
+kubectl get pods
+
+kubectl get pods -o wide (provides additional details of pods)
+ 
+kubectl explain pods
+
+9a. Details of a specific pod 
+======================
+
+kubectl describe pod <pod id>
+
+9b. Deleting a pod
+===============
+
+kubectl delete pod <pod id>
+
+9c. get the logs of the pod
+================
+
+kubectl logs <pod id>
+kubectl logs -f <pod id> (follow the logs)
+
+
+10. Commands related to replicaset (in the command, replicaset can be referenced as replicaset/replicasets/rs)
+==================================================================
+
+kubectl get replicaset
+kubectl get replicasets
+kubectl get rs
+
+kubectl explain replicaset
+
+kubectl get rs -o wide
+
+11. Commands related to Deployment (Deployment/Deployments)
+===================================
+kubectl get deployment
+kubectl get deployments
+
+12. Commands related to service (services/service/svc)
+=========================================
+kubectl get service
+kubectl get services
+kubectl get svc
+kubectl get svc --watch
+
+
+13. Get the status of the master node components
+======================================
+kubectl get componentstatuses
+
+
+
+14. Login to docker hub from cli and push the image
+========================
+docker login
+docker push <dockerhub user id>/<Image name>:<image tag>
+
+
+15. Commands to get all the components together
+=======================================
+kubectl get all
+
+
+
+16. command to create deployment/service resoure specified in a yaml file
+=====================================================
+kubectl apply -f workload.yaml
+ 
+17. Command to check the difference between deployed deployment (Tomcat) with the deployment.yaml (to be deployed)
+=========================================================================================
+kubectl diff deployment.yaml
+
+19.  command to delete all the pods/services related to a deployment name
+========================================================
+
+kubectl delete all -l app=<deployment name>
+
+(small l)
+
+
+ 20. Centralized Configuration option (ConfigMap)
+=======================================
+a. create a config map
+------------------------------------
+kubectl create configmap <configmap name> --from-literal=<key>=<value> 
+
+b. get the config map details
+-------------------------------------------
+kubectl get configmap
+
+c. get the specific config map details and export it to yaml file
+--------------------------------------------------------------------------------------------
+kubectl get configmap <configmap name> -o yaml >> <filename>.yaml
+
+
+
+ 21. command to get the history of deployment
+======================================
+
+kubectl rollout history deployment <deploymentname>
+kubectl rollout history deployment currency-exchange
+
+undo the deployment to last revision
+==============================
+kubectl rollout undo deployment <currency-exchange> --to-revision=<1>
+
+
+ 
+kubernetes uses readiness probe to check the health of a microservice.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ If readiness probe is not successfull, no traffic is sent.
+ If liveness probe is not successful, pod is restarted.
+Spring boot actuator (>=2.3), provides inbuilt readiness and liveness probe. For it to work, we need to set 3 properties in application.properties
+
+configuring the readiness and liveness probe ensures that pod will receive traffic only when it is ready.
+
+
+command to get horizontal pod autoscaler (hpa)
+===================================
+kubectl get hpa
+
+kubectl delete hpa <hpa name>
+kubectl delete hpa <currency-exchange>
+
+command to get the detail on how much cpu is being utilized by pod/node
+=======================================================
+kubectl top pod
+kubectl top nodes
+
+
+
+ 
+kubectl get pods --all-namespaces
+
+ 
+Fire a request to url every .1 sec..
+==================================
+ 
+watch -n 0.1 curl http://34.66.241.150:8100/currency-conversion-feign/from/USD/to/INR/quantity/10
+
+

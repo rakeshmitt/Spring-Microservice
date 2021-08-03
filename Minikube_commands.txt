@@ -1,0 +1,65 @@
+1. Download the minikube.exe for windows version
+
+2. set the path parameter in environment variables
+
+3. then run the below command:
+
+minikube start
+
+minikube start --vm-driver="virtualbox/hyperv/docker" --insecure-registry="$REG_IP":80
+
+default vm-driver is docker
+
+
+
+minikube status   --> check the status
+
+(it starts the minikube in docker environment)
+
+4. If kubectl is already installed, run below command to check:
+
+kubectl get po -A
+
+minikube can download the appropriate version of kubectl using below command
+
+minikube kubectl --get po -A
+
+5. To run the minikube dashboar:
+
+minikube dashboard
+
+6. Pause Kubernetes without impacting deployed applications:
+ 
+minikube pause
+
+7. Halt the cluster:
+minikube stop
+
+8. Increase the default memory limit (requires a restart):
+
+minikube config set memory 16384
+
+9. Browse the catalog of easily installed Kubernetes services:
+
+minikube addons list
+
+10. Create a second cluster running an older Kubernetes release:
+
+minikube start -p aged --kubernetes-version=v1.16.1
+
+11. Delete all of the minikube clusters:
+
+minikube delete --all
+
+
+12. In case there is any issue that minikube startup process gets hanged, then use below command:
+	>>minikube start --bootstrapper=localkube
+
+13.	In case minikube gets crashed and corrupted use below command:
+1.  minikube stop   ---> stop the minikube instance
+2.  minikube delete  ---> delete the minikube instance
+3. delete the .minikube and .kube folder from the user folder
+4.  then start the minikube instance from fresh
+
+
+
