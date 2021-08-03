@@ -1,0 +1,21 @@
+1. Maven build goal to build docker image:
+spring-boot:build-image -DskipTests
+
+2. bring up containers using docker-compose
+docker-compose up
+
+3. bring down containers using docker-compose
+docker-compose down
+
+4. Microservice url:
+
+http://localhost:8100/currency-conversion-feign/from/eur/to/inr/quantity/1000
+http://localhost:8000/currency-exchange/from/usd/to/inr
+http://localhost:8765/currency-exchange/from/usd/to/inr
+http://localhost:8765/currency-conversion/from/usd/to/inr/quantity/100
+
+eureka server:
+http://localhost:8761/
+
+zipkin:
+http://localhost:9411/zipkin
